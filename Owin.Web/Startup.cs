@@ -9,10 +9,12 @@ namespace Owin.Web
     {
         public void Configuration(IAppBuilder app)
         {
+            ConfigureApi(app);
+            ConfigureMvc(app);
             app.UseHandlerAsync((req, res) =>
             {
                 res.ContentType = "text/plain";
-                return res.WriteAsync("OWIN Web Application");
+                return res.WriteAsync("OWIN Web Application Final step");
             });
         }
     }

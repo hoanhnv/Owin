@@ -15,8 +15,8 @@ namespace Owin.Web
         void Application_Start(object sender, EventArgs e)
         {
             // Code that runs on application startup
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);            
+            //WebApiConfig.Register(GlobalConfiguration.Configuration);
+            //RouteConfig.RegisterRoutes(RouteTable.Routes);            
         }
 
         void Application_End(object sender, EventArgs e)
