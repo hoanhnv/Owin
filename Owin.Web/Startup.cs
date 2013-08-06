@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Owin.Web.App_Start;
 
 namespace Owin.Web
 {
@@ -10,7 +7,7 @@ namespace Owin.Web
         public void Configuration(IAppBuilder app)
         {
             ConfigureApi(app);
-            ConfigureMvc(app);
+            app.UseNancy(new NancyBootstrapper());
             app.UseHandlerAsync((req, res) =>
             {
                 res.ContentType = "text/plain";

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
-using WebApiContrib.Formatting;
+﻿using System.Web.Http;
+using Owin.Web.Formatters;
 
 namespace Owin.Web
 {
@@ -10,7 +7,10 @@ namespace Owin.Web
     {
         public static void Register(HttpConfiguration config)
         {
-            config.Formatters.Add(new ProtoBufFormatter());
+            var index = config.Formatters.IndexOf(config.Formatters.JsonFormatter);
+            config.Formatters.RemoveAt(index);
+            config.Formatters.Insert(index, new ServiceStackJsonFormatter()); // //Content-Type: application/json
+            config.Formatters.Add(new ProtoBufFormatter()); //Content-Type: application/x-protobuf
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
