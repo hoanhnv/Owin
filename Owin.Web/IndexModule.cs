@@ -2,6 +2,7 @@
 using Nancy.ModelBinding;
 using Owin.Web.Models;
 using Owin.Web.Models.Api;
+using ServiceStack.Text;
 
 namespace Owin.Web
 {
@@ -13,7 +14,7 @@ namespace Owin.Web
             Post["/"] = _ =>
                         {
                             var dto = this.Bind<Person>();
-                            return HttpStatusCode.OK;
+                            return dto.ToJson();
                         };
             Get["/Person"] = _ => new Person {Id = 1, Name = "Nemo Nobody"};
         }
