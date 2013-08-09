@@ -1,11 +1,27 @@
 ﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Owin.Web.Models.IndexViewModel>
+<html>
+<head>
+    <script type="text/javascript" src="//vk.com/js/api/openapi.js?98"></script>
 
-<h2>
-    @Model.Title
-</h2>
-<p>It's work!</p>
-<form action="/" method="POST">
-    <input type="hidden" name="id" value="1"/>
-    <input type="hidden" name="name" value="Nemo Nobody" />
-    <input type="submit" value="Submit"/>
-</form>
+    <script type="text/javascript">
+        VK.init({ apiId: 3812214, onlyWidgets: true });
+    </script>
+</head>
+<body>
+    <h2>
+        @Model.Title
+    </h2>
+
+    <div id="vk_like"></div>
+    <script type="text/javascript">
+        VK.Widgets.Like('vk_like');
+    </script>
+
+    <p>It's work!</p>
+    <form action="/" method="POST">
+        <input type="hidden" name="id" value="1" />
+        <input type="hidden" name="name" value="Nemo Nobody" />
+        <input type="submit" value="Submit" />
+    </form>
+</body>
+</html>
