@@ -1,4 +1,5 @@
-﻿using Owin.Web.App_Start;
+﻿using Nancy.Owin;
+using Owin.Web.App_Start;
 
 namespace Owin.Web
 {
@@ -7,7 +8,7 @@ namespace Owin.Web
         public void Configuration(IAppBuilder app)
         {
             ConfigureApi(app);
-            app.UseNancy(new NancyBootstrapper());
+            app.UseNancy(new NancyOptions { Bootstrapper = new NancyBootstrapper() });
             app.UseHandlerAsync((req, res) =>
             {
                 res.ContentType = "text/plain";

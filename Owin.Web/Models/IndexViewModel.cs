@@ -8,5 +8,6 @@ namespace Owin.Web.Models
     public class IndexViewModel
     {
         public string Title { get; set; }
+        public string UserName { get; set; }
     }
 }

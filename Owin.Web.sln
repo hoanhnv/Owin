@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.20623.1 VSUPREVIEW
+VisualStudioVersion = 12.0.20827.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Owin.Web", "Owin.Web\Owin.Web.csproj", "{633910E5-4815-4E61-BBCF-3E0263477631}"
 EndProject
@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5C9569
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Owin.Web.Tests", "Owin.Web.Tests\Owin.Web.Tests.csproj", "{DC16055B-74E3-4AEC-8F7D-C2930FF6F8BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Owin.Domain", "Owin.Domain\Owin.Domain.csproj", "{51D39E08-B4B5-4435-B9DD-AB9468393753}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,6 +30,10 @@ Global
 		{DC16055B-74E3-4AEC-8F7D-C2930FF6F8BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC16055B-74E3-4AEC-8F7D-C2930FF6F8BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC16055B-74E3-4AEC-8F7D-C2930FF6F8BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51D39E08-B4B5-4435-B9DD-AB9468393753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51D39E08-B4B5-4435-B9DD-AB9468393753}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51D39E08-B4B5-4435-B9DD-AB9468393753}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51D39E08-B4B5-4435-B9DD-AB9468393753}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

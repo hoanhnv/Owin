@@ -1,22 +1,56 @@
-﻿using Nancy;
-using Nancy.ModelBinding;
+﻿using System;
+using System.Dynamic;
+using Nancy;
+using Nancy.Authentication.Forms;
+using Nancy.Extensions;
+using Nancy.Security;
+using Owin.Web.Authentication.Forms;
 using Owin.Web.Models;
-using Owin.Web.Models.Api;
-using ServiceStack.Text;
 
 namespace Owin.Web
 {
-    public class IndexModule:NancyModule
+    public class IndexModule : NancyModule
     {
         public IndexModule()
         {
-            Get["/"] = _ => View[new IndexViewModel {Title = "Nancy Fx + RazorViewEngine"}];
-            Post["/"] = _ =>
-                        {
-                            var dto = this.Bind<Person>();
-                            return dto.ToJson();
-                        };
-            Get["/Person"] = _ => new Person {Id = 1, Name = "Nemo Nobody"};
+            Get["/"] = _ =>
+            {
+                //this.RequiresAuthentication();
+                var indexViewModel = new IndexViewModel
+                {
+                    UserName = "no",//Context.CurrentUser.UserName,
+                    Title = "Nancy Fx + RazorViewEngine"
+                };
+                return View[indexViewModel];
+            };
+
+            Get["/login"] = x =>
+            {
+                dynamic model = new ExpandoObject();
+                model.Errored = Request.Query.error.HasValue;
+
+                return View["login", model];
+            };
+
+            Post["/login"] = x =>
+            {
+                var userGuid = UserMapper.ValidateUser((string)Request.Form.Username, (string)Request.Form.Password);
+
+                if (userGuid == null)
+                {
+                    return Context.GetRedirect("~/login?error=true&username=" + (string)Request.Form.Username);
+                }
+
+                DateTime? expiry = null;
+                if (Request.Form.RememberMe.HasValue)
+                {
+                    expiry = DateTime.Now.AddDays(7);
+                }
+
+                return this.LoginAndRedirect(userGuid.Value, expiry);
+            };
+
+            Get["/logout"] = x => this.LogoutAndRedirect("~/");
         }
     }
 }

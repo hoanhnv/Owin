@@ -1,53 +1,94 @@
 ﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Owin.Web.Models.IndexViewModel>
 <html>
 <head>
-    <script type="text/javascript" src="//vk.com/js/api/openapi.js?98"></script>
-
-    
-
+    <title></title>
+    <!-- Force latest IE rendering engine or ChromeFrame if installed -->
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/Content/css/jquery.fileupload.css" rel="stylesheet" />
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="~/Scripts/html5shiv.js"></script>
+        <script src="~/Scripts/respond.min.js"></script>
+    <![endif]-->
     <style>
-        div {
-            display: inline-block;
+        #wrap {
+            min-height: 100%;
+            height: auto !important;
+            height: 100%;
+            margin: 0 auto -60px;
+            padding: 0 0 60px;
+        }
+        #footer {
+            padding: 5px;
+            background-color: #f5f5f5;
         }
     </style>
-    <script type="text/javascript">
-        VK.init({ apiId: 3812214, onlyWidgets: true });
-    </script>
 </head>
 <body>
-    <h2>
-        @Model.Title
-    </h2>
-    <div id="fb-root"></div>
+    <div id="wrap">
+        <div class="container">
+            <div class="page-header">
+                <h1>@Model.Title</h1>
+            </div>
+            <p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS.</p>
+            <p>Use <a href="../sticky-footer-navbar">the sticky footer with a fixed navbar</a> if need be, too.</p>
+        </div>
+    </div>
+    <div id="footer">
+        <div class="container">
+            <!-- The fileinput-button span is used to style the file input field as button -->
+            <span class="btn btn-success fileinput-button">
+                <i class="glyphicon glyphicon-plus"></i>
+                <span>Select files...</span>
+                <!-- The file input field used as target for the file upload widget -->
+                <input id="fileupload" type="file" name="files[]">
+            </span>
+            <br>
+            <br>
+            <!-- The global progress bar -->
+            <div id="progress" class="progress">
+                <div class="progress-bar progress-bar-success"></div>
+            </div>
+            <!-- The container for the uploaded files -->
+            <div id="files" class="files"></div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-2.0.3.js"></script>
+    <script src="~/Scripts/jquery.ui.widget.js"></script>
+    <script src="~/Scripts/jquery.iframe-transport.js"></script>
+    <script src="~/Scripts/jquery.fileupload.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
     <script>
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/ru_RU/all.js#xfbml=1&appId=381036251935291";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));</script>
-
-    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
-    <script>
-        !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + '://platform.twitter.com/widgets.js'; fjs.parentNode.insertBefore(js, fjs); } }(document, 'script', 'twitter-wjs');
+       /*jslint unparam: true */
+       /*global window, $ */
+       $(function () {
+            'use strict';
+           // Change this to the location of your server-side upload handler:
+           var url = 'api/Files';
+           $('#fileupload').fileupload({
+                url: url,
+               dataType: 'json',
+               done: function (e, data) {
+                    $.each(data.result.files, function (index, file) {
+                        $('<p/>').text(file.name).appendTo('#files');
+                    });
+                },
+               progressall: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                   $('#progress .progress-bar').css(
+                       'width',
+                       progress + '%'
+                   );
+                }
+            }).prop('disabled', !$.support.fileInput)
+               .parent().addClass($.support.fileInput ? undefined : 'disabled');
+        });
     </script>
-
-    <!-- Put this div tag to the place, where the Like block will be -->
-    <div id="vk_like"></div>
-    <script type="text/javascript">
-        VK.Widgets.Like('vk_like', { type: "mini" });
-    </script>
-
-    <div class="fb-like" data-href="http://developers.facebook.com/docs/reference/plugins/like" data-width="200" data-layout="button_count" data-show-faces="false" data-send="false"></div>
-
-    
-
-    <p>It's work!</p>
-    <form action="/" method="POST">
-        <input type="hidden" name="id" value="1" />
-        <input type="hidden" name="name" value="Nemo Nobody" />
-        <input type="submit" value="Submit" />
-    </form>
 </body>
+
 </html>
