@@ -19,7 +19,7 @@ namespace Owin.Web
                 var indexViewModel = new IndexViewModel
                 {
                     UserName = "no",//Context.CurrentUser.UserName,
-                    Title = "Nancy Fx + RazorViewEngine"
+                    Title = "База Батареек"
                 };
                 return View[indexViewModel];
             };

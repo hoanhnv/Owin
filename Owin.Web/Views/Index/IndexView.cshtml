@@ -19,13 +19,17 @@
             min-height: 100%;
             height: auto !important;
             height: 100%;
-            margin: 0 auto -60px;
-            padding: 0 0 60px;
+            margin: 0 auto -50px;
+            padding: 0 0 50px;
         }
+
         #footer {
-            padding: 5px;
-            background-color: #f5f5f5;
+            /*padding: 5px;
+            background-color: #f5f5f5;*/
         }
+            #progress {
+                margin-top: 11px;
+            }
     </style>
 </head>
 <body>
@@ -34,28 +38,48 @@
             <div class="page-header">
                 <h1>@Model.Title</h1>
             </div>
-            <p class="lead">Pin a fixed-height footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS.</p>
-            <p>Use <a href="../sticky-footer-navbar">the sticky footer with a fixed navbar</a> if need be, too.</p>
+            <div>
+                <span class="btn btn-success fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Select files...</span>
+                    <input id="fileupload" type="file" name="files[]">
+                </span>
+                <div id="progress" class="progress">
+                    <div class="progress-bar progress-bar-success"></div>
+                </div>
+                <div id="files" class="files"></div>
+            </div>
+            <div id="view-model-holder" style="display:none;">
+                <p><input type="checkbox" data-bind="checked:isNew" /> Новые </p>
+                <p><input type="checkbox" data-bind="checked:isChanged" /> С изменениями </p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="5">Всего: {{count}} ({{newCount}}/{{changedCount}})</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Code</th>
+                            <th>Price</th>
+                            <th>Old Price</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: products">
+                        <tr>
+                            <td><input type="checkbox" data-bind="checked:checked" /> </td>
+                            <td>{{id}}</td>
+                            <td>{{code}}</td>
+                            <td>{{price}}</td>
+                            <td>{{oldPrice}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <div id="footer">
-        <div class="container">
-            <!-- The fileinput-button span is used to style the file input field as button -->
-            <span class="btn btn-success fileinput-button">
-                <i class="glyphicon glyphicon-plus"></i>
-                <span>Select files...</span>
-                <!-- The file input field used as target for the file upload widget -->
-                <input id="fileupload" type="file" name="files[]">
-            </span>
-            <br>
-            <br>
-            <!-- The global progress bar -->
-            <div id="progress" class="progress">
-                <div class="progress-bar progress-bar-success"></div>
-            </div>
-            <!-- The container for the uploaded files -->
-            <div id="files" class="files"></div>
-        </div>
+
     </div>
 
     <script src="~/Scripts/jquery-2.0.3.js"></script>
@@ -63,31 +87,84 @@
     <script src="~/Scripts/jquery.iframe-transport.js"></script>
     <script src="~/Scripts/jquery.fileupload.js"></script>
     <script src="~/Scripts/bootstrap.js"></script>
+    <script src="~/Scripts/knockout-3.0.0rc.js"></script>
+    <script src="~/Scripts/StringInterpolatingBindingProvider.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.debug.js"></script>
     <script>
-       /*jslint unparam: true */
-       /*global window, $ */
-       $(function () {
+
+
+
+        ko.bindingProvider.instance = new StringInterpolatingBindingProvider();
+        $(function () {
             'use strict';
-           // Change this to the location of your server-side upload handler:
-           var url = 'api/Files';
-           $('#fileupload').fileupload({
+            // Change this to the location of your server-side upload handler:
+            var url = 'api/Files';
+
+            function fileLoaded() {
+                return;
+            }
+            $('#fileupload').fileupload({
                 url: url,
-               dataType: 'json',
-               done: function (e, data) {
-                    $.each(data.result.files, function (index, file) {
-                        $('<p/>').text(file.name).appendTo('#files');
-                    });
+                dataType: 'json',
+                done: function (e, data) {
+                    $('#fileupload').attr('disabled','disabled');
+                    var model = new ProductsViewModel(data.result);
+                    ko.applyBindings(model, $('#view-model-holder')[0]);
+                    $('#progress .progress-bar').css('width', '100%');
+                    $('#view-model-holder').show();
+                    $('<p/>').text(data.files[0].name).appendTo('#files');
                 },
-               progressall: function (e, data) {
+                progressall: function (e, data) {
+                    console.log(data.loaded);
                     var progress = parseInt(data.loaded / data.total * 100, 10);
-                   $('#progress .progress-bar').css(
-                       'width',
-                       progress + '%'
-                   );
+                    $('#progress .progress-bar').css(
+                        'width',
+                        progress / 2 + '%'
+                    );
+                    if (progress === 100)
+                        fileLoaded();
                 }
             }).prop('disabled', !$.support.fileInput)
-               .parent().addClass($.support.fileInput ? undefined : 'disabled');
+                .parent().addClass($.support.fileInput ? undefined : 'disabled');
         });
+
+        function ProductsViewModel(data) {
+            var self = this;
+            self.isNew = ko.observable(true);
+            self.isChanged = ko.observable(true);
+            self.initProducts = [];
+            ko.utils.arrayForEach(data, function (item) {
+                self.initProducts.push(new ProductViewModel(item));
+            });
+            
+            self.count = self.initProducts.length;
+            self.newCount = ko.utils.arrayFilter(self.initProducts, function (item) { return !item.id; }).length;
+            self.changedCount = ko.utils.arrayFilter(self.initProducts, function (item) { return !!item.id; }).length;
+            
+            self.products = ko.computed(function () {
+                var isNew = ko.unwrap(self.isNew);
+                var isChanged = ko.unwrap(self.isChanged);
+                return ko.utils.arrayFilter(self.initProducts, function (item) {
+                    if (isNew) {
+                        return isChanged || !item.id;
+                    } else {
+                        return isChanged || !!item.id;
+                    }
+                });
+            }).extend({ throttle: 10 });
+
+
+        }
+
+        function ProductViewModel(item) {
+            var self = this;
+            self.id = item.Id;
+            self.checked = ko.observable(false);
+            self.code = item.Code;
+            self.price = item.Price;
+            self.oldPrice = item.OldPrice;
+        }
+
     </script>
 </body>
 

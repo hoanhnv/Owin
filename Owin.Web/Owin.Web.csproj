@@ -40,6 +40,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -147,7 +154,13 @@
     <Content Include="Scripts\jquery.fileupload.js" />
     <Content Include="Scripts\jquery.iframe-transport.js" />
     <Content Include="Scripts\jquery.ui.widget.js" />
+    <Content Include="Scripts\knockout-3.0.0rc.js" />
+    <Content Include="Scripts\knockout.debug.js" />
+    <Content Include="Scripts\knockout.js" />
+    <Content Include="Scripts\knockout.mapping-latest.debug.js" />
+    <Content Include="Scripts\knockout.mapping-latest.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\StringInterpolatingBindingProvider.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +198,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Owin.Data\Owin.Data.csproj">
+      <Project>{2DD43CFC-BCEE-494E-92E3-130BCB3C7228}</Project>
+      <Name>Owin.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Owin.Domain\Owin.Domain.csproj">
       <Project>{51D39E08-B4B5-4435-B9DD-AB9468393753}</Project>
       <Name>Owin.Domain</Name>
